@@ -35,7 +35,4 @@ def home():
     return {"message": "Booking Service running with Flask + venv!"}
 
 if __name__ == "__main__":
-    is_render = os.getenv("RENDER")  # Render sets env vars automatically
-    host = "0.0.0.0" if is_render else "127.0.0.1"
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host=host, port=port, debug=True)
+    app.run(debug=True, port=6061)
