@@ -12,15 +12,19 @@ load_dotenv()  # ✅ This loads variables from .env into environment
 
 app = Flask(__name__)
 # ✅ Read env variables
-host = os.getenv("HOST_NAME")
-port = os.getenv("PORT")
-user = os.getenv("NAME")
-password = os.getenv("PASSWORD")
+host = os.getenv("PROD_HOST_NAME")
+port = os.getenv("PROD_PORT")
+user = os.getenv("PROD_NAME")
+password = os.getenv("PROD_PASSWORD")
+
+prod_db_url = os.getenv("INTERNAL_URL") 
+local_db_url = os.getenv("LOCAL_URL")
 
 # print(f"{user}:{password}@{host}:{port}")
 # PostgreSQL config
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost:Pinky@143@localhost:5432/Booking Service'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{host}:{port}/Booking Service'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = prod_db_url or local_db_url
+# f'postgresql://{user}:{password}@{host}:{port}/Booking Service'  //Db URL LOCAL
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
@@ -33,4 +37,4 @@ def home():
     return {"message": "Booking Service running with Flask + venv!"}
 
 if __name__ == "__main__":
-    app.run(debug=True, port=6061)
+     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 6061)), debug=True)
